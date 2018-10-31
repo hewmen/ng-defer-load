@@ -9,7 +9,7 @@
     "prebuild": "npm run clean",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "build": "ngc -p ./tsconfig.json && tsc -p ./tsconfig.json",
-    "prepublishOnly": "npm run lint && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "author": "Vamsi Vempati",
   "license": "MIT",
