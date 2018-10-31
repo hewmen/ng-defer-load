@@ -14,13 +14,13 @@ export class DeferLoadDirective implements AfterViewInit, OnDestroy {
     private _intersectionObserver?: IntersectionObserver;
     private _scrollSubscription?: Subscription;
 
-    constructor (
+    constructor(
         private _element: ElementRef,
         private _zone: NgZone,
         @Inject(PLATFORM_ID) private platformId: Object
     ) { }
 
-    public ngAfterViewInit () {
+    public ngAfterViewInit() {
         if (isPlatformBrowser(this.platformId)) {
             if (this.hasCompatibleBrowser()) {
                 this.registerIntersectionObserver();
@@ -37,7 +37,7 @@ export class DeferLoadDirective implements AfterViewInit, OnDestroy {
         }
     }
 
-    public hasCompatibleBrowser (): boolean {
+    public hasCompatibleBrowser(): boolean {
         const hasIntersectionObserver = 'IntersectionObserver' in window;
         const userAgent = window.navigator.userAgent;
         const matches = userAgent.match(/Edge\/(\d*)\./i);
@@ -48,11 +48,11 @@ export class DeferLoadDirective implements AfterViewInit, OnDestroy {
         return hasIntersectionObserver && (!isEdge || isEdgeVersion16OrBetter);
     }
 
-    public ngOnDestroy () {
+    public ngOnDestroy() {
         this.removeListeners();
     }
 
-    private registerIntersectionObserver (): void {
+    private registerIntersectionObserver(): void {
         if (!!this._intersectionObserver) {
             return;
         }
@@ -72,21 +72,16 @@ export class DeferLoadDirective implements AfterViewInit, OnDestroy {
         });
     }
 
-    private checkIfIntersecting (entry: IntersectionObserverEntry) {
-        // For Samsung native browser, IO has been partially implemented where by the
-        // callback fires, but entry object is empty. We will check manually.
-        if (entry && Object.keys(entry).length) {
-            return (<any>entry).isIntersecting && entry.target === this._element.nativeElement;
-        }
-        return this.isVisible();
+    private checkIfIntersecting(entry: IntersectionObserverEntry) {
+        return (<any>entry).isIntersecting && entry.target === this._element.nativeElement;
     }
 
-    private load (): void {
+    private load(): void {
         this.removeListeners();
         this.deferLoad.emit();
     }
 
-    private addScrollListeners () {
+    private addScrollListeners() {
         if (this.isVisible()) {
             this.load();
             return;
@@ -98,7 +93,7 @@ export class DeferLoadDirective implements AfterViewInit, OnDestroy {
         });
     }
 
-    private removeListeners () {
+    private removeListeners() {
         if (this._scrollSubscription) {
             this._scrollSubscription.unsubscribe();
         }
@@ -114,13 +109,13 @@ export class DeferLoadDirective implements AfterViewInit, OnDestroy {
         }
     }
 
-    private isVisible () {
+    private isVisible() {
         let scrollPosition = this.getScrollPosition();
         let elementOffset = this._element.nativeElement.offsetTop;
         return elementOffset <= scrollPosition;
     }
 
-    private getScrollPosition () {
+    private getScrollPosition() {
         // Getting screen size and scroll position for IE
         return (window.scrollY || window.pageYOffset)
             + (document.documentElement.clientHeight || document.body.clientHeight);
